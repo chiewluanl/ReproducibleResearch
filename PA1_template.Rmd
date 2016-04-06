@@ -1,4 +1,5 @@
 setwd("/Users/chiewluanl/RProject/Reproducible_Research")
+``` {r}
 library("plyr")
 library("knitr")
 library("reshape2")
@@ -44,7 +45,7 @@ steps_median
 
 ##1.0 Make a time series plot (i.e. 𝚝𝚢𝚙𝚎 = "𝚕") of the 5-minute interval (x-axis) and the average number of steps taken, ## averaged across all days (y-axis)
 steps_per_interval <- aggregate(steps ~ interval, nonNAData, mean)
-plot(steps ~ interval, data = stepsInterval, type = "l")
+plot(steps ~ interval, data = steps_per_interval, type = "l")
 ###== OR ==
 stepsInterval <- aggregate(steps ~ interval, data = data, mean, na.rm = TRUE)
 ggplot(data=stepsInterval, aes(x=interval, y=steps)) + geom_line()
@@ -67,7 +68,7 @@ dataWithNAReplacement <- data
 ## 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
 for (i in 1:nrow(dataWithNAReplacement)){
   if (is.na(dataWithNAReplacement$steps[i])){
-    dataWithNAReplacement$steps[i] <- steps_per_interval$steps[[which(steps_per_interval$interval == dataWithNAReplacement$interval[i])]]
+    dataWithNAReplacement$steps[i] <- steps_per_interval$steps[which(steps_per_interval$interval == dataWithNAReplacement$interval[i])]
 ##   count = count +1
   }
 }
@@ -88,7 +89,10 @@ dataWithNAReplacement$day = ifelse(as.POSIXlt(as.Date(dataWithNAReplacement$date
 dataWithNAReplacement$day = factor(dataWithNAReplacement$day, levels = c("weekday", "weekend"))
 
 ## 2. Make a panel plot containing a time series plot (i.e. 𝚝𝚢𝚙𝚎 = "𝚕") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
+
 stepsInterval = aggregate(steps ~ interval + day, dataWithNAReplacement, mean)
 library(lattice)
 xyplot(steps ~ interval | factor(day), data = stepsInterval, 
        type = "l", ylab= "Number of steps", xlab="Interval")
+```     
+...
